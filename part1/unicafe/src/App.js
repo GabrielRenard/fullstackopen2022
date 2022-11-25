@@ -16,6 +16,7 @@ function App() {
   const badHandler = () => {
     setBad(prevState => prevState + 1);
   };
+
   return (
     <>
       <h1>Give feedback</h1>
