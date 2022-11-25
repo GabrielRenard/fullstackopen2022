@@ -1,4 +1,7 @@
 import { useState } from "react";
+import AnecdoteOfDay from "./AnecdoteOfDay";
+import MostVotedAnecdote from "./MostVotedAnecdote";
+import Button from "./Button";
 
 function App() {
   const anecdotes = [
@@ -26,18 +29,25 @@ function App() {
     setVotesArr(copy);
   };
 
+  const maxVotes = Math.max(...votesArr);
+  const maxVotesIndex = votesArr.indexOf(maxVotes);
+
+  const maxVotedAnecdote = anecdotes[maxVotesIndex];
+
+  console.log(maxVotes, maxVotesIndex);
+
   return (
     <>
-      <p>{anecdotes[anecdoteIndex]}</p>
-      <p>Has {votesArr[anecdoteIndex]} votes</p>
-      <div>
-        <button type="button" onClick={nextAnecdoteHandler}>
-          Next anecdote
-        </button>
-        <button type="button" onClick={voteHandler}>
-          Vote
-        </button>
-      </div>
+      <AnecdoteOfDay
+        anecdotesArr={anecdotes}
+        anecdotesIndex={anecdoteIndex}
+        votesArr={votesArr}
+      />
+      <Button onclick={nextAnecdoteHandler} name="Next anecdote" />
+      <Button onclick={voteHandler} name="Vote" />
+      {votesArr.find(el => el > 0) && (
+        <MostVotedAnecdote maxVoted={maxVotedAnecdote} />
+      )}
     </>
   );
 }
