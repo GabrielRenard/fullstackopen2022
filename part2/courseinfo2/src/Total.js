@@ -1,10 +1,12 @@
 import React from "react";
 
 const Total = ({ course }) => {
-  const sumOfExercises =
-    course.parts[0].exercises +
-    course.parts[1].exercises +
-    course.parts[2].exercises;
+  const sumOfExercises = course.parts.reduce(
+    (acc, curr) => acc + curr.exercises,
+    0
+  );
+
+  console.log(sumOfExercises);
 
   return (
     <div>
