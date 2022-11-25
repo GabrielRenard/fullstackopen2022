@@ -10,23 +10,34 @@ function App() {
     "Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.",
     "Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.",
   ];
+  const [anecdoteIndex, setAnecdoteIndex] = useState(0);
+  const [votesArr, setVotesArr] = useState(new Array(anecdotes.length).fill(0));
 
-  const btnClickHandler = () => {
-    const num = Math.floor(Math.random() * anecdotes.length);
-    setSelected(num);
+  console.log(anecdoteIndex);
+  console.log(votesArr);
+
+  const nextAnecdoteHandler = () => {
+    setAnecdoteIndex(Math.floor(Math.random() * anecdotes.length));
   };
 
-  const [selected, setSelected] = useState(0);
+  const voteHandler = () => {
+    const copy = [...votesArr];
+    copy[anecdoteIndex] += 1;
+    setVotesArr(copy);
+  };
 
   return (
     <>
-      <div className="btn">
-        <button type="button" onClick={btnClickHandler}>
+      <p>{anecdotes[anecdoteIndex]}</p>
+      <p>Has {votesArr[anecdoteIndex]} votes</p>
+      <div>
+        <button type="button" onClick={nextAnecdoteHandler}>
           Next anecdote
         </button>
+        <button type="button" onClick={voteHandler}>
+          Vote
+        </button>
       </div>
-
-      {anecdotes[selected]}
     </>
   );
 }
