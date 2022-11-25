@@ -7,15 +7,21 @@ const Statistics = ({ good, neutral, bad }) => {
   const total = goodScore + neutralScore + badScore;
   const all = good + neutral + bad;
 
-  return (
+  const content = (
     <>
-      <h2>Statistics</h2>
       <p>good {good}</p>
       <p>neutral {neutral}</p>
       <p>bad {bad}</p>
-      <p>all {total}</p>
+      <p>all {all}</p>
       <p>Average {total / all}</p>
       <p>Positive {(good / all) * 100} %</p>
+    </>
+  );
+
+  return (
+    <>
+      <h2>Statistics</h2>
+      {good || neutral || bad ? content : <p>No Feedback given</p>}
     </>
   );
 };
