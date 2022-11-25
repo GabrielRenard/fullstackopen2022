@@ -20,9 +20,9 @@ function App() {
         part1={part1}
         part2={part2}
         part3={part3}
-        exercises1={exercises1}
-        exercises2={exercises2}
-        exercises3={exercises3}
+        exercise1={exercises1}
+        exercise2={exercises2}
+        exercise3={exercises3}
       />
       <Total totalExercises={totalNumExercises} />
     </div>

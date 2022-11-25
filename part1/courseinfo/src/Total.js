@@ -1,7 +1,11 @@
 import React from "react";
 
-const Total = () => {
-  return <div>Total</div>;
+const Total = props => {
+  return (
+    <>
+      <p>Number of exercises: {props.totalExercises}</p>
+    </>
+  );
 };
 
 export default Total;
