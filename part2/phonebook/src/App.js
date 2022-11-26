@@ -1,4 +1,7 @@
 import { useState } from "react";
+import Filter from "./components/Filter";
+import PersonForm from "./components/PersonForm";
+import Persons from "./components/Persons";
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -46,7 +49,10 @@ const App = () => {
 
   const phoneBookList = persons
     .filter(person => {
-      return person.name.toLowerCase().includes(search.toLowerCase());
+      return (
+        person.name.toLowerCase().includes(search.toLowerCase()) ||
+        person.number.includes(search.toLowerCase())
+      );
     })
     .map(person => (
       <li key={person.id}>
@@ -56,26 +62,22 @@ const App = () => {
 
   return (
     <div>
-      <div>
-        <label htmlFor="filter">Filter</label>
-        <input type="text" id="filter" onChange={filterNameHandler} />
-      </div>
       <h2>Phonebook</h2>
-      <form onSubmit={formSubmitHandler}>
-        <div>
-          <label htmlFor="name">Name</label>
-          <input id="name" onChange={nameChangeHandler} value={newName} />
-        </div>
-        <div>
-          <label htmlFor="number">Number</label>
-          <input id="number" onChange={numberChangeHandler} value={newNumber} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <Filter filterNameHandler={filterNameHandler} />
+      <h3>Add new</h3>
+      <PersonForm
+        onChangeName={nameChangeHandler}
+        onChangeNumber={numberChangeHandler}
+        onSubmitForm={formSubmitHandler}
+        newName={newName}
+        newNumber={newNumber}
+      />
       <h2>Numbers</h2>
-      <ul>{phoneBookList}</ul>
+      <Persons
+        persons={persons}
+        search={search}
+        phoneBookList={phoneBookList}
+      />
     </div>
   );
 };
