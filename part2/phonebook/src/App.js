@@ -11,6 +11,12 @@ const App = () => {
   const formSubmitHandler = e => {
     e.preventDefault();
 
+    if (persons.find(el => el.name === newName)) {
+      window.alert(`${newName} is already added to the phonebook`);
+      setNewName("");
+      return;
+    }
+
     const newPerson = {
       name: newName,
       id: Math.random(),
