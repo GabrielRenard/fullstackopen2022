@@ -19,7 +19,7 @@ const App = () => {
       return country.name.common.toLowerCase().includes(query.toLowerCase());
     })
     .map(country => (
-      <div key={country.id}>
+      <div key={country.name.common}>
         <h1>{country.name.common}</h1>
         <h3>Capital: {country.capital}</h3>
         <h3>Area: {country.area}</h3>
@@ -37,7 +37,18 @@ const App = () => {
     .filter(country => {
       return country.name.common.toLowerCase().includes(query.toLowerCase());
     })
-    .map(country => <p>{country.name.common}</p>);
+    .map(country => (
+      <div key={country.name.common}>
+        <p>{country.name.common}</p>
+        <button
+          onClick={() => {
+            setQuery(country.name.common);
+          }}
+        >
+          show
+        </button>
+      </div>
+    ));
 
   return (
     <>
