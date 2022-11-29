@@ -10,7 +10,11 @@ const createContact = contactObj => {
   return axios.post(baseUrl, contactObj);
 };
 
+const deleteContact = id => {
+  return axios.delete(`${baseUrl}/${id}`);
+};
 export default {
   getAll,
   createContact,
+  deleteContact,
 };

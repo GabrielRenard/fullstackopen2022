@@ -53,18 +53,16 @@ const App = () => {
     setSearch(e.target.value);
   };
 
-  const phoneBookList = persons
-    .filter(person => {
-      return (
-        person.name.toLowerCase().includes(search.toLowerCase()) ||
-        person.number.includes(search.toLowerCase())
-      );
-    })
-    .map(person => (
-      <li key={person.id}>
-        {person.name} {person.number}
-      </li>
-    ));
+  const deleteContactHandler = id => {
+    const personToDelete = persons
+      .filter(person => person.id === id)
+      .map(person => person.name);
+    if (window.confirm(`Delete ${personToDelete} ?`)) {
+      contactsService.deleteContact(id).then(() => {
+        setPersons(persons.filter(person => person.id !== id));
+      });
+    }
+  };
 
   return (
     <div>
@@ -82,7 +80,7 @@ const App = () => {
       <Persons
         persons={persons}
         search={search}
-        phoneBookList={phoneBookList}
+        onClick={deleteContactHandler}
       />
     </div>
   );
