@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
-import axios from "axios";
 import contactsService from "./services/contacts";
 
 const App = () => {
@@ -28,24 +27,52 @@ const App = () => {
   const formSubmitHandler = e => {
     e.preventDefault();
 
-    if (persons.find(el => el.name === newName)) {
-      window.alert(`${newName} is already added to the phonebook`);
-      setNewName("");
-      return;
-    }
-
-    if (newName !== "") {
+    if (newName.length > 1 && newNumber.length > 6) {
+      // Create new contacts object
       const newPerson = {
         name: newName,
         number: newNumber,
       };
 
-      contactsService.createContact(newPerson).then(response => {
-        setPersons(persons.concat(response.data));
+      const foundPerson = persons.find(person => person.name === newName);
+      const foundNumber = persons.find(person => person.number === newNumber);
+
+      if (foundPerson && foundNumber) {
+        {
+          window.alert(`${newName} is already added to the phonebook`);
+          setNewName("");
+          setNewNumber("");
+          return;
+        }
+      } else if (foundPerson || foundNumber) {
+        const personToUpdate = persons.find(person => person.name === newName);
+        if (
+          window.confirm(
+            `${personToUpdate.name} is already added to the phonebook, replace the old number with a new one?`
+          )
+        ) {
+          contactsService
+            .updateContact(personToUpdate.id, newPerson)
+            .then(updatedPerson =>
+              setPersons(
+                persons.map(person =>
+                  person.id !== updatedPerson.id ? person : updatedPerson
+                )
+              )
+            );
+          setNewName("");
+          setNewNumber("");
+          return;
+        }
+      } else {
+        // Create the new contact in state
+        contactsService
+          .createContact(newPerson)
+          .then(newPerson => setPersons(persons.concat(newPerson)));
 
         setNewName("");
         setNewNumber("");
-      });
+      }
     }
   };
 

@@ -7,14 +7,22 @@ const getAll = () => {
 };
 
 const createContact = contactObj => {
-  return axios.post(baseUrl, contactObj);
+  const request = axios.post(baseUrl, contactObj);
+  return request.then(response => response.data);
 };
 
 const deleteContact = id => {
-  return axios.delete(`${baseUrl}/${id}`);
+  const request = axios.delete(`${baseUrl}/${id}`);
+  return request.then(response => response.data);
+};
+
+const updateContact = (id, newObject) => {
+  const request = axios.put(`${baseUrl}/${id}`, newObject);
+  return request.then(response => response.data);
 };
 export default {
   getAll,
   createContact,
   deleteContact,
+  updateContact,
 };
