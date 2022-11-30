@@ -22,7 +22,7 @@ const Persons = ({ persons, search, onClick }) => {
   return (
     <ul>
       {phoneBookList && phoneBookList}
-      {phoneBookList.length === 0 && <p>Not in contacts</p>}
+      {phoneBookList.length === 0 && <p>No contacts</p>}
     </ul>
   );
 };

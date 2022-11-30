@@ -3,12 +3,17 @@ import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import contactsService from "./services/contacts";
+import "./index.css";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [search, setSearch] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isSuccessMessageVisible, setIsSuccessMessageVisible] = useState(false);
+  const [isErrorMessageVisible, setIsErrorMessageVisible] = useState(false);
 
   useEffect(() => {
     contactsService.getAll().then(response => {
@@ -29,49 +34,77 @@ const App = () => {
 
     if (newName.length > 1 && newNumber.length > 6) {
       // Create new contacts object
+
       const newPerson = {
         name: newName,
         number: newNumber,
       };
-
       const foundPerson = persons.find(person => person.name === newName);
-      const foundNumber = persons.find(person => person.number === newNumber);
 
-      if (foundPerson && foundNumber) {
+      if (!foundPerson) {
+        // Create the new contact in state
+        contactsService
+          .createContact(newPerson)
+          .then(newObj => setPersons(persons.concat(newObj)));
+
+        setSuccessMessage(`Added ${newPerson.name}`);
+        setIsSuccessMessageVisible(true);
+        setTimeout(() => {
+          setIsSuccessMessageVisible(false);
+        }, 3000);
+        setNewName("");
+        setNewNumber("");
+      } else if (
+        foundPerson.name === newPerson.name &&
+        foundPerson.number === newPerson.number
+      ) {
         {
           window.alert(`${newName} is already added to the phonebook`);
           setNewName("");
           setNewNumber("");
           return;
         }
-      } else if (foundPerson || foundNumber) {
-        const personToUpdate = persons.find(person => person.name === newName);
+      } else if (
+        foundPerson.name === newPerson.name &&
+        foundPerson.number !== newPerson.number
+      ) {
         if (
           window.confirm(
-            `${personToUpdate.name} is already added to the phonebook, replace the old number with a new one?`
+            `${foundPerson.name} is already added to the phonebook, replace the old number with a new one?`
           )
         ) {
           contactsService
-            .updateContact(personToUpdate.id, newPerson)
+            .updateContact(foundPerson.id, newPerson)
             .then(updatedPerson =>
               setPersons(
                 persons.map(person =>
                   person.id !== updatedPerson.id ? person : updatedPerson
                 )
               )
-            );
+            )
+            .then(() => {
+              setSuccessMessage(`updated ${newPerson.name}`);
+              setIsSuccessMessageVisible(true);
+              setTimeout(() => {
+                setIsSuccessMessageVisible(false);
+              }, 3000);
+            })
+            .catch(err => {
+              console.log(err);
+              setErrorMessage(
+                `Information of ${newPerson.name} has already been removed from the server `
+              );
+              setIsErrorMessageVisible(true);
+              setTimeout(() => {
+                setIsErrorMessageVisible(false);
+              }, 3000);
+            });
+
           setNewName("");
           setNewNumber("");
+
           return;
         }
-      } else {
-        // Create the new contact in state
-        contactsService
-          .createContact(newPerson)
-          .then(newPerson => setPersons(persons.concat(newPerson)));
-
-        setNewName("");
-        setNewNumber("");
       }
     }
   };
@@ -89,10 +122,17 @@ const App = () => {
         setPersons(persons.filter(person => person.id !== id));
       });
     }
+    setSuccessMessage(`deleted ${personToDelete}`);
+    setIsSuccessMessageVisible(true);
+    setTimeout(() => {
+      setIsSuccessMessageVisible(false);
+    }, 3000);
   };
 
   return (
-    <div>
+    <div className="app-container">
+      {isSuccessMessageVisible && <p className="success">{successMessage}</p>}
+      {isErrorMessageVisible && <p className="error">{errorMessage}</p>}
       <h2>Phonebook</h2>
       <Filter filterNameHandler={filterNameHandler} />
       <h3>Add new</h3>
