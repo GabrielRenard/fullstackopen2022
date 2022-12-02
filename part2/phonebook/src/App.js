@@ -58,12 +58,10 @@ const App = () => {
         foundPerson.name === newPerson.name &&
         foundPerson.number === newPerson.number
       ) {
-        {
-          window.alert(`${newName} is already added to the phonebook`);
-          setNewName("");
-          setNewNumber("");
-          return;
-        }
+        window.alert(`${newName} is already added to the phonebook`);
+        setNewName("");
+        setNewNumber("");
+        return;
       } else if (
         foundPerson.name === newPerson.name &&
         foundPerson.number !== newPerson.number
