@@ -119,12 +119,12 @@ const App = () => {
       contactsService.deleteContact(id).then(() => {
         setPersons(persons.filter(person => person.id !== id));
       });
+      setSuccessMessage(`deleted ${personToDelete}`);
+      setIsSuccessMessageVisible(true);
+      setTimeout(() => {
+        setIsSuccessMessageVisible(false);
+      }, 3000);
     }
-    setSuccessMessage(`deleted ${personToDelete}`);
-    setIsSuccessMessageVisible(true);
-    setTimeout(() => {
-      setIsSuccessMessageVisible(false);
-    }, 3000);
   };
 
   return (
