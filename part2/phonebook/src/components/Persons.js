@@ -1,19 +1,19 @@
 import React from "react";
 
-const Persons = ({ persons, search, onClick }) => {
-  const phoneBookList = persons
-    .filter(person => {
+const Persons = ({ contacts, filterInput, onClick }) => {
+  const phoneBookList = contacts
+    .filter(contact => {
       return (
-        person.name.toLowerCase().includes(search.toLowerCase()) ||
-        person.number.includes(search.toLowerCase())
+        contact.name.toLowerCase().includes(filterInput.toLowerCase()) ||
+        contact.number.includes(filterInput.toLowerCase())
       );
     })
-    .map(person => (
-      <li key={person.id}>
+    .map(contact => (
+      <li key={contact.id}>
         <p>
-          {person.name} {person.number}
+          {contact.name} {contact.number}
           <span>
-            <button onClick={() => onClick(person.id)}>delete</button>
+            <button onClick={() => onClick(contact.id)}>delete</button>
           </span>
         </p>
       </li>

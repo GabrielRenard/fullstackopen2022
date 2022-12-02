@@ -6,101 +6,105 @@ import contactsService from "./services/contacts";
 import "./index.css";
 
 const App = () => {
-  const [persons, setPersons] = useState([]);
-  const [newName, setNewName] = useState("");
-  const [newNumber, setNewNumber] = useState("");
-  const [search, setSearch] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [isSuccessMessageVisible, setIsSuccessMessageVisible] = useState(false);
-  const [isErrorMessageVisible, setIsErrorMessageVisible] = useState(false);
+  const [contacts, setContacts] = useState([]);
+  const [contactInput, setContactInput] = useState({ name: "", number: "" });
+  const [filterInput, setFilterInput] = useState("");
+  const [confirmation, setConfirmation] = useState({
+    message: "",
+    error: false,
+    isVisible: false,
+  });
 
   useEffect(() => {
     contactsService.getAll().then(response => {
-      setPersons(response.data);
+      setContacts(response.data);
     });
   }, []);
 
   const nameChangeHandler = e => {
-    setNewName(e.target.value);
+    setContactInput({ ...contactInput, name: e.target.value });
   };
 
   const numberChangeHandler = e => {
-    setNewNumber(e.target.value);
+    setContactInput({ ...contactInput, number: e.target.value });
   };
 
   const formSubmitHandler = e => {
     e.preventDefault();
 
-    if (newName.length > 1 && newNumber.length > 6) {
+    if (contactInput.name.length > 1 && contactInput.number.length > 6) {
       // Create new contacts object
 
-      const newPerson = {
-        name: newName,
-        number: newNumber,
+      const newContact = {
+        name: contactInput.name,
+        number: contactInput.number,
       };
-      const foundPerson = persons.find(person => person.name === newName);
+      const foundContact = contacts.find(
+        contact => contact.name === contactInput.name
+      );
 
-      if (!foundPerson) {
+      if (!foundContact) {
         // Create the new contact in state
         contactsService
-          .createContact(newPerson)
-          .then(newObj => setPersons(persons.concat(newObj)));
+          .createContact(newContact)
+          .then(newContact => setContacts(contacts.concat(newContact)));
 
-        setSuccessMessage(`Added ${newPerson.name}`);
-        setIsSuccessMessageVisible(true);
+        setConfirmation({
+          ...confirmation,
+          message: `Added ${newContact.name}`,
+          isVisible: true,
+        });
         setTimeout(() => {
-          setIsSuccessMessageVisible(false);
+          setConfirmation({ ...confirmation, isVisible: false });
         }, 3000);
-        setNewName("");
-        setNewNumber("");
+        setContactInput({ name: "", number: "" });
       } else if (
-        foundPerson.name === newPerson.name &&
-        foundPerson.number === newPerson.number
+        foundContact.name === newContact.name &&
+        foundContact.number === newContact.number
       ) {
-        window.alert(`${newName} is already added to the phonebook`);
-        setNewName("");
-        setNewNumber("");
+        window.alert(`${newContact.name} is already added to the phonebook`);
+        setContactInput({ name: "", number: "" });
         return;
       } else if (
-        foundPerson.name === newPerson.name &&
-        foundPerson.number !== newPerson.number
+        foundContact.name === newContact.name &&
+        foundContact.number !== newContact.number
       ) {
         if (
           window.confirm(
-            `${foundPerson.name} is already added to the phonebook, replace the old number with a new one?`
+            `${foundContact.name} is already added to the phonebook, replace the old number with a new one?`
           )
         ) {
           contactsService
-            .updateContact(foundPerson.id, newPerson)
-            .then(updatedPerson =>
-              setPersons(
-                persons.map(person =>
-                  person.id !== updatedPerson.id ? person : updatedPerson
+            .updateContact(foundContact.id, newContact)
+            .then(updatedContact =>
+              setContacts(
+                contacts.map(contact =>
+                  contact.id !== updatedContact.id ? contact : updatedContact
                 )
               )
             )
             .then(() => {
-              setSuccessMessage(`updated ${newPerson.name}`);
-              setIsSuccessMessageVisible(true);
+              setConfirmation({
+                ...confirmation,
+                message: `updated ${newContact.name}`,
+                isVisible: true,
+              });
               setTimeout(() => {
-                setIsSuccessMessageVisible(false);
+                setConfirmation({ ...confirmation, isVisible: false });
               }, 3000);
             })
             .catch(err => {
               console.log(err);
-              setErrorMessage(
-                `Information of ${newPerson.name} has already been removed from the server `
-              );
-              setIsErrorMessageVisible(true);
+              setConfirmation({
+                message: `Information of ${newContact.name} has already been removed from the server`,
+                error: true,
+                isVisible: true,
+              });
               setTimeout(() => {
-                setIsErrorMessageVisible(false);
+                setConfirmation({ ...confirmation, isVisible: false });
               }, 3000);
             });
-
-          setNewName("");
-          setNewNumber("");
-
+          setContactInput({ name: "", number: "" });
           return;
         }
       }
@@ -108,29 +112,36 @@ const App = () => {
   };
 
   const filterNameHandler = e => {
-    setSearch(e.target.value);
+    setFilterInput(e.target.value);
   };
 
   const deleteContactHandler = id => {
-    const personToDelete = persons
-      .filter(person => person.id === id)
-      .map(person => person.name);
-    if (window.confirm(`Delete ${personToDelete} ?`)) {
+    const contactToDelete = contacts
+      .filter(contact => contact.id === id)
+      .map(contact => contact.name);
+    if (window.confirm(`Delete ${contactToDelete} ?`)) {
       contactsService.deleteContact(id).then(() => {
-        setPersons(persons.filter(person => person.id !== id));
+        setContacts(contacts.filter(contact => contact.id !== id));
       });
-      setSuccessMessage(`deleted ${personToDelete}`);
-      setIsSuccessMessageVisible(true);
+      setConfirmation({
+        ...confirmation,
+        message: `deleted ${contactToDelete}`,
+        isVisible: true,
+      });
       setTimeout(() => {
-        setIsSuccessMessageVisible(false);
+        setConfirmation({ ...confirmation, isVisible: false });
       }, 3000);
     }
   };
 
   return (
     <div className="app-container">
-      {isSuccessMessageVisible && <p className="success">{successMessage}</p>}
-      {isErrorMessageVisible && <p className="error">{errorMessage}</p>}
+      {confirmation.isVisible && !confirmation.error && (
+        <p className="success">{confirmation.message}</p>
+      )}
+      {confirmation.isVisible && confirmation.error && (
+        <p className="error">{confirmation.message}</p>
+      )}
       <h2>Phonebook</h2>
       <Filter filterNameHandler={filterNameHandler} />
       <h3>Add new</h3>
@@ -138,13 +149,12 @@ const App = () => {
         onChangeName={nameChangeHandler}
         onChangeNumber={numberChangeHandler}
         onSubmitForm={formSubmitHandler}
-        newName={newName}
-        newNumber={newNumber}
+        contactInput={contactInput}
       />
       <h2>Numbers</h2>
       <Persons
-        persons={persons}
-        search={search}
+        contacts={contacts}
+        filterInput={filterInput}
         onClick={deleteContactHandler}
       />
     </div>
