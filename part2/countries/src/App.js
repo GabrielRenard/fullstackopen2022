@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import CountryDetails from "./components/CountryDetails";
 import Input from "./components/Input";
+import "./index.css";
 
 const App = () => {
   const [countryData, setCountryData] = useState([]);
@@ -35,13 +36,15 @@ const App = () => {
 
   return (
     <>
-      <Input onChange={filterChangeHandler} />
-      <CountryDetails
-        countryData={countryData}
-        query={query}
-        onClick={queryChangeHandler}
-        onChange={filterChangeHandler}
-      />
+      <div className="flex flex-col">
+        <Input onChange={filterChangeHandler} />
+        <CountryDetails
+          countryData={countryData}
+          query={query}
+          onClick={queryChangeHandler}
+          onChange={filterChangeHandler}
+        />
+      </div>
     </>
   );
 };

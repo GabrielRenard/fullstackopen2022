@@ -14,16 +14,27 @@ const WeatherDetails = ({ filteredList }) => {
   }, [filteredList]);
 
   const weatherDataList = (
-    <div>
-      <h2>Weather in {weatherData.name}</h2>
-      <h3>{weatherData?.main?.temp} &deg; Celsius</h3>
-      <h3>{weatherData?.weather?.[0].description}</h3>
-
-      <img
-        src={`https://openweathermap.org/img/wn/${weatherData?.weather?.[0].icon}@2x.png`}
-        alt=""
-      />
-      <h3>Wind: {weatherData?.wind?.speed} m/s</h3>
+    <div className="flex flex-col mt-5">
+      <h2 className="font-bold text-2xl xl:text-3xl self-center">
+        Current Weather in {weatherData.name}
+      </h2>
+      <div className="w-75 xl:w-100 self-center">
+        <img
+          src={`https://openweathermap.org/img/wn/${weatherData?.weather?.[0].icon}@2x.png`}
+          alt="weather-icon"
+        />
+      </div>
+      <div className="flex text-xl xl:text-2xl justify-between">
+        <div className="text-center">
+          <h3 className="font-bold">Temperature</h3>
+          <h3>{weatherData?.main?.temp} &deg;C</h3>
+        </div>
+        <div className="text-center">
+          <h3 className="font-bold">Description</h3>
+          <h3>{weatherData?.weather?.[0].description}</h3>
+          <h3>Wind: {weatherData?.wind?.speed} m/s</h3>
+        </div>
+      </div>
     </div>
   );
 
