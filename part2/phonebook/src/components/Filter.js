@@ -1,11 +1,16 @@
 import React from "react";
+import Input from "./UI/Input";
 
 const Filter = ({ filterNameHandler }) => {
   return (
-    <div>
-      <label htmlFor="filter">Filter</label>
-      <input type="text" id="filter" onChange={filterNameHandler} />
-    </div>
+    <>
+      <Input
+        label="Filter"
+        onChange={filterNameHandler}
+        type="text"
+        placeholder="Filter contacts"
+      />
+    </>
   );
 };
 
