@@ -61,7 +61,17 @@ const App = () => {
         // Create the new contact in state if the contact doesnt already exist
         contactsService
           .createContact(newContact)
-          .then(newContact => setContacts(prev => prev.concat(newContact)));
+          .then(newContact => setContacts(prev => prev.concat(newContact)))
+          .catch(error => {
+            console.log(error.response.data.error);
+            setConfirmation({
+              ...confirmation,
+              message: error.response.data.error,
+              error: true,
+              isVisible: true,
+            });
+            return;
+          });
 
         setConfirmation({
           ...confirmation,
