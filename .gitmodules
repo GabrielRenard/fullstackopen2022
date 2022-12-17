@@ -1,0 +1,3 @@
+[submodule "part2/phonebook/phonebook_backend"]
+	path = part2/phonebook/phonebook_backend
+	url = https://github.com/GabrielRenard/fullstackopen2022_backend
