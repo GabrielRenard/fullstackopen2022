@@ -19,7 +19,9 @@ const App = () => {
     "https://api.openweathermap.org/data/2.5/weather?q=${weatherQuery}&appid=${process.env.REACT_APP_API_KEY}&units=metric";
 
   useEffect(() => {
-    fetch("https://restcountries.com/v3.1/all")
+    fetch("https://restcountries.com/v3.1/all", {
+      mode: 'no-cors'
+    })
       .then(res => res.json())
       .then(data =>
         setCountryData(
