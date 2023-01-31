@@ -20,10 +20,7 @@ const App = () => {
 
   useEffect(() => {
     fetch("https://restcountries.com/v3.1/all", {
-      mode: 'no-cors'
-    })
-      .then(res => res.json())
-      .then(data =>
+    }).then(res => res.json()).then(data =>
         setCountryData(
           data.map(country => ({
             name: country.name.common,
