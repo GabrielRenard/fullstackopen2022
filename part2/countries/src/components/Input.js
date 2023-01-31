@@ -10,7 +10,7 @@ const Input = ({ onChange, value }) => {
         type="text"
         id="country"
         onChange={onChange}
-        className="text-xl text-white glass-card border-none p-[0.25rem] focus:outline-none bg-slate-100 md:text-slate-900 pl-3 rounded-full "
+        className="text-xl placeholder-slate-900 glass-card border-none p-[0.25rem] focus:outline-none bg-slate-100 md:text-slate-900 pl-3 rounded-full "
         placeholder="Enter a Country"
       />
     </div>

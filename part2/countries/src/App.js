@@ -15,12 +15,8 @@ const App = () => {
     setQuery(query);
   };
 
-  const url =
-    "https://api.openweathermap.org/data/2.5/weather?q=${weatherQuery}&appid=${process.env.REACT_APP_API_KEY}&units=metric";
-
   useEffect(() => {
-    fetch("https://restcountries.com/v3.1/all", {
-    }).then(res => res.json()).then(data =>
+    fetch("https://restcountries.com/v3.1/all").then(res => res.json()).then(data =>
         setCountryData(
           data.map(country => ({
             name: country.name.common,

@@ -11,8 +11,8 @@ const CountryDetails = ({ countryData, query, onClick }) => {
   const mainDetails = filteredList.map(country => {
     return (
       <>
-        <div className=" w-full text-lg flex flex-col justify-center items-center xl:text-2xl">
-          <Card key={country.capital}>
+        <div key={country.capital} className=" w-full text-lg flex flex-col justify-center items-center xl:text-2xl">
+          <Card >
             <div className="flex w-1/2">
               <img
                 src={country.flags?.svg}
